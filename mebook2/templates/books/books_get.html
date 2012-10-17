@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block rigth %}
+<div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Категории <span class="badge">{{ len_serias|length }}</span></li>
+              {% for seria in sp_serias %}
+                <li><a href="/books/s{{ seria.id }}">{{ seria.name }} <span class="badge badge-info">{{ seria.book_set.all|length }}</span></a></li>
+              {% endfor %}
+
+              <li class="nav-header">Авторы <span class="badge">{{ sp_autors|length }}</span></li>
+              {% for autor in sp_autors %}
+                <li><a href="/books/a{{ autor.id }}">{{ autor }} <span class="badge badge-info">{{ autor.book_set.all|length }}</span></a></li>
+              {% endfor %}
+            </ul>
+  </div><!--/.well -->
+{% endblock %}
+
+{% block heald %}
+<li class="divider"></li>
+<li class="nav-header">Серии</li>
+{% for seria in sp_serias %}
+  <li><a href="/books/s{{ seria.id }}">{{ seria.name }}<!--  <span class="badge badge-info">{{ seria.book_set.all|length }}</span> --></a></li>
+{% endfor %}
+<li class="divider"></li>
+<li class="nav-header">Авторы</li>
+{% for autor in sp_autors %}
+  <li><a href="/books/a{{ autor.id }}">{{ autor }}<!--  <span class="badge badge-info">{{ autor.book_set.all|length }}</span> --></a></li>
+{% endfor %}
+
+{% endblock %}
+
+
+{% block content %}
+<div class="span9">
+<h1 align="center"><a href="/books/s{{ book.serias_id }}/{{ book.id }}">{{ book.title }}</a></h1>
+<p align="center"><img src="{{ book.oblojka.url }}"   alt="bb"  /></p>
+<strong>Название &rarr;</strong> {{ book.title }} <br />
+<strong>Автор &rarr;</strong> {% for x in book.authors.all %} 
+                                {{ x }} 
+                              {% endfor %} <br />
+<strong>Дата публикации &rarr;</strong> {{ book.pub_date }} <br />
+<strong>Серия &rarr;</strong> {{ book.serias }} <br />
+<strong>Книга добавлена на сайт </strong> {{ book.add_date }} <br />
+<br />
+<strong>Аннотация &rarr;</strong> {{ book.annotation }} <br />
+<br />
+{% if book.url_l %}
+<strong><a href="{{ book.url_l }}">Скачать</a></strong><br />
+<br />
+{% endif %}
+{% if book.book_file %}
+<strong><a href="{{ book.book_file.url }}">Скачать с сервера</a></strong><br />
+<br />
+
+{% endif %}
+
+
+</div><!--/span-->
+{% endblock %}
+
+{% block auth %}
+{% if user.is_authenticated %}
+  <ul class="nav pull-right">
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Привет, {{ user.username }}</a>
+        <ul class="dropdown-menu">
+          <li><a data-toggle="modal" href="/accounts/logout/">Выйти</a></li>
+         <!--  <li><a data-toggle="modal" href="/accounts/register/">Регистрация</a></li> -->
+        </ul>
+    </li>
+  </ul>
+{% else %}
+  <ul class="nav pull-right">
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Привет,  гость</a>
+        <ul class="dropdown-menu">
+          <li><a data-toggle="modal" href="/accounts/login/">Войти</a></li>
+          <li><a data-toggle="modal" href="/accounts/register/">Регистрация</a></li>
+        </ul>
+    </li>
+  </ul>
+{% endif %}
+
+
+{% endblock %}
+

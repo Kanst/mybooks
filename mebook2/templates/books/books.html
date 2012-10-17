@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block rigth %}
+<div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Категории <span class="badge">{{ len_serias|length }}</span></li>
+              {% for seria in sp_serias %}
+                <li><a href="/books/s{{ seria.id }}">{{ seria.name }} <span class="badge badge-info">{{ seria.book_set.all|length }}</span></a></li>
+              {% endfor %}
+
+              <li class="nav-header">Авторы <span class="badge">{{ sp_autors|length }}</span></li>
+              {% for autor in sp_autors %}
+                <li><a href="/books/a{{ autor.id }}">{{ autor }} <span class="badge badge-info">{{ autor.book_set.all|length }}</span></a></li>
+              {% endfor %}
+            </ul>
+  </div><!--/.well -->
+{% endblock %}
+
+{% block heald %}
+<li class="divider"></li>
+<li class="nav-header">Серии</li>
+{% for seria in sp_serias %}
+  <li><a href="/books/s{{ seria.id }}">{{ seria.name }}<!--  <span class="badge badge-info">{{ seria.book_set.all|length }}</span> --></a></li>
+{% endfor %}
+<li class="divider"></li>
+<li class="nav-header">Авторы</li>
+{% for autor in sp_autors %}
+  <li><a href="/books/a{{ autor.id }}">{{ autor }}<!--  <span class="badge badge-info">{{ autor.book_set.all|length }}</span> --></a></li>
+{% endfor %}
+
+{% endblock %}
+
+{% block content %}
+<div class="span9">
+
+
+
+{% for bookss in sp_books %}
+    <h2><a href="/books/s{{ bookss.serias_id }}/{{ bookss.id }}">{{ bookss.title }}</a></h2>
+                <p >
+                    <br />
+                    <img src="{{ bookss.oblojka.url }}" width="110"  alt="bb" style="float: left; padding: 0px 13px 0px 10px;" />
+                    <br />
+                    <strong>Название &rarr;</strong> {{ bookss.title }} <br />
+                    <strong>Автор &rarr;</strong> {% for x in bookss.authors.all %} 
+                                                      {{ x }} 
+                                                  {% endfor %} <br />
+                    <strong>Дата публикации &rarr;</strong> {{ bookss.pub_date }} <br />
+                    <strong>Серия &rarr;</strong> {{ bookss.serias }} <br />
+                    <br />
+                    <strong>Аннотация &rarr;</strong> {{ bookss.annotation }} <br />
+                    <br />
+
+                    <div class="news-footer" style="display: inline-block;
+                                                    margin-top: 10px;
+                                                    border: 1px solid #e5e5e5;
+                                                    color: #888;
+                                                    border-radius: 4px;
+                                                    padding: 3px 15px;
+                                                    font-size: .9em;">
+                    <span>Дата добавления - {{bookss.add_date}},</span>
+                    <span class="news-comment-count">
+                    </span>
+                    <a class="news-read-more" href="/books/s{{ bookss.serias_id }}/{{ bookss.id }}">Читать дальше &rarr;</a>
+                    </div>
+                <br /><br />
+                </p>
+
+{% endfor %}
+
+
+
+
+
+
+<div class="pagination pagination-centered">
+  <ul>
+    {% if sp_books.paginator.num_pages != 1 %}
+        {% if sp_books.has_previous %}
+          <li><a href="?page={{ sp_books.previous_page_number }}">&larr; Пред</a></li>
+        {% else %}
+          <li class="disabled"><span>Пред</span></li>
+        {% endif %}
+
+        {% if sp_books.number == 1 %}
+            <li><a href="?page=1">1</a></li>
+            <li><a href="?page=2">2</a></li>
+            {% if sp_books.paginator.num_pages > 2 %}
+              <li class="disabled"><span>...</span></li>
+              <li><a href="?page={{ sp_books.paginator.num_pages }}">{{ sp_books.paginator.num_pages }}</a></li>
+            {% endif %}
+        {% else %}    
+              {% if sp_books.number == sp_books.paginator.num_pages  %}
+                  <li><a href="?page=1">1</a></li>
+                  {% if sp_books.paginator.num_pages > 2 %}
+
+                    <li class="disabled"><span>...</span></li>
+                    <li><a href="?page={{ sp_books.previous_page_number }}">{{ sp_books.previous_page_number }}</a></li>
+                  {% endif %}
+                  <li><a href="?page={{ sp_books.paginator.num_pages }}">{{ sp_books.paginator.num_pages }}</a></li>
+                 
+              {% else %}
+                    {% if sp_books.number == sp_books.paginator.num_pages|add:"-1" %}
+                        {% if sp_books.paginator.num_pages > 3 %}
+                            <li><a href="?page=1">1</a></li>
+                        {% endif %}
+                        {% if sp_books.paginator.num_pages > 4 %}
+                                <li class="disabled"><span>...</span></li>
+                        {% endif %}
+                        <li><a href="?page={{ sp_books.previous_page_number }}">{{ sp_books.previous_page_number }}</a></li>
+                        <li class="active"><span>{{ sp_books.number }}</span></li>
+                        <li><a href="?page={{ sp_books.next_page_number }}">{{ sp_books.next_page_number }}</a></li>
+                    {% else %}
+                        {% if sp_books.number == 2 %}
+                            <li><a href="?page={{ sp_books.previous_page_number }}">{{ sp_books.previous_page_number }}</a></li>
+                            <li class="active"><span>{{ sp_books.number }}</span></li>
+                            <li><a href="?page={{ sp_books.next_page_number }}">{{ sp_books.next_page_number }}</a></li>
+                            {% if sp_books.paginator.num_pages > 4 %}
+                                    <li class="disabled"><span>...</span></li>
+                            {% endif %}
+                            <li><a href="?page={{ sp_books.paginator.num_pages }}">{{ sp_books.paginator.num_pages }}</a></li>
+                        {% else %}
+                            {% if sp_books.number == 3 %}
+                                <li><a href="?page=1">1</a></li>
+                                <li><a href="?page=2">2</a></li>
+                                <li class="active"><span>{{ sp_books.number }}</span></li>
+                                <li><a href="?page={{ sp_books.next_page_number }}">{{ sp_books.next_page_number }}</a></li>
+                                {% if sp_books.paginator.num_pages > 4 %}
+                                    <li class="disabled"><span>...</span></li>
+                                {% endif %}
+                                <li><a href="?page={{ sp_books.paginator.num_pages }}">{{ sp_books.paginator.num_pages }}</a></li>
+                            {% else %}
+                                {% if sp_books.number == sp_books.paginator.num_pages|add:"-2" %}
+                                    <li><a href="?page=1">1</a></li>
+                                    <li class="disabled"><span>...</span></li>
+                                    <li><a href="?page={{ sp_books.previous_page_number }}">{{ sp_books.previous_page_number }}</a></li>
+                                    <li class="active"><span>{{ sp_books.number }}</span></li>
+                                    <li><a href="?page={{ sp_books.next_page_number }}">{{ sp_books.next_page_number }}</a></li>
+                                    <li><a href="?page={{ sp_books.paginator.num_pages }}">{{ sp_books.paginator.num_pages }}</a></li>
+                                {% else %}
+                                    <li><a href="?page=1">1</a></li>
+                                    <li class="disabled"><span>...</span></li>
+                                    <li><a href="?page={{ sp_books.previous_page_number }}">{{ sp_books.previous_page_number }}</a></li>
+                                    <li class="active"><span>{{ sp_books.number }}</span></li>
+                                    <li><a href="?page={{ sp_books.next_page_number }}">{{ sp_books.next_page_number }}</a></li>
+                                    <li class="disabled"><span>...</span></li>
+                                    <li><a href="?page={{ sp_books.paginator.num_pages }}">{{ sp_books.paginator.num_pages }}</a></li>    
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+              {% endif %} 
+
+            
+        {% endif %}
+
+
+    {% if sp_books.has_next %}
+      <li><a href="?page={{ sp_books.next_page_number }}">След &rarr;</a></li>
+    {% else %}
+      <li class="disabled"><span>След</span></li>
+    {% endif %}
+     {% endif %} 
+
+  </ul>
+</div>
+</div><!--/span-->
+{% endblock %}
+
+
+
+{% block auth %}
+{% if user.is_authenticated %}
+  <ul class="nav pull-right">
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Привет, {{ user.username }}</a>
+        <ul class="dropdown-menu">
+          <li><a data-toggle="modal" href="/accounts/logout/">Выйти</a></li>
+         <!--  <li><a data-toggle="modal" href="/accounts/register/">Регистрация</a></li> -->
+        </ul>
+    </li>
+  </ul>
+{% else %}
+  <ul class="nav pull-right">
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Привет,  гость</a>
+        <ul class="dropdown-menu">
+          <li><a data-toggle="modal" href="/accounts/login/">Войти</a></li>
+          <li><a data-toggle="modal" href="/accounts/register/">Регистрация</a></li>
+        </ul>
+    </li>
+  </ul>
+{% endif %}
+
+
+{% endblock %}

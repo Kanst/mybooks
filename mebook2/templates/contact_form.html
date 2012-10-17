@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+<div id="content">
+    <div id="left">
+      <h2>Категории</h2>
+      <ul>
+        <li><a href="http://web-mastery.info/">Solutions</a></li>
+        <li><a href="http://web-mastery.info/">Products</a>
+        <li><a href="http://web-mastery.info/">Contact Us</a></li>
+      </ul>
+      <h2>Useful Sites</h2>
+      <ul>
+        <li><a href="http://web-mastery.info/">Dylan Butler</a></li>
+        <li><a href="http://web-mastery.info/">Awake At Three</a></li>
+        <li><a href="http://web-mastery.info/">Pint, Inc.</a></li>
+        <li><a href="http://web-mastery.info/">Submit Your Site</a></li>
+      </ul>
+    </div>
+<div id="right">
+      <h1>Contact us</h1>
+
+    {% if form.errors %}
+        <p style="color: red;">
+            Пожалуйста, исправьте ошибки ниже{{ form.errors|pluralize }}.
+        </p>
+    {% endif %}
+
+    <form action="" method="post">{% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+
+{% endblock %}
